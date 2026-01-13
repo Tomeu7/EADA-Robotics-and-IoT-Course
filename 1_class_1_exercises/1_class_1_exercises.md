@@ -1,5 +1,55 @@
 # Session 1 exercises
 
+## Common Issues & Troubleshooting
+
+Before starting the exercises, be aware of these common pitfalls:
+
+### 1. Forgetting to source the workspace
+**Problem**: `ros2 run` can't find your package even after building
+**Solution**: After every `colcon build`, you must run:
+```bash
+source install/setup.bash
+```
+**Pro tip**: You need to do this in every new terminal, or add it to your `~/.bashrc`
+
+### 2. Setup.py entry_points syntax errors
+**Problem**: Node doesn't register or build fails
+**Solution**: Check your `setup.py` carefully:
+- Comma placement matters
+- Format: `'executable_name = package_name.module_name:main'`
+- Example: `'exercise1 = exercise1.exercise1:main'`
+
+### 3. Path confusion (host vs container)
+**Problem**: Files created on host aren't visible in container (or vice versa)
+**Solution**:
+- Host path: `~/ros2-course-exchange/` (wherever you created it)
+- Container path: `/home/user/exchange/`
+- Only files in the shared folder are synced!
+
+### 4. Docker GUI not working
+**Problem**: RViz, rqt_graph, or turtlesim won't display
+**Solution**: On host machine, run:
+```bash
+xhost +
+export DISPLAY=:0
+```
+Make sure the Docker run command includes the display variables (already in setup)
+**Note**: If still not working, try `export DISPLAY=:1` or check your display number with `echo $DISPLAY`
+
+### 5. Build errors after code changes
+**Problem**: Changes to Python files don't take effect
+**Solution**:
+- If it doesn't work: `colcon build --packages-select your_package_name`
+- For setup.py changes: Must rebuild with `colcon build`
+
+### 6. Multiple terminal confusion
+**Problem**: Lost track of which terminal is running what
+**Solution**: Use terminator and split panes:
+- `Ctrl+Shift+E`: Split vertically
+- `Ctrl+Shift+O`: Split horizontally
+- `Ctrl+Shift+W`: Close current pane
+- Label your terminals mentally (or use terminator profiles)
+
 ## Exercise 1 — Hello World Node
 
 ### Start with activating the default jazzy system-wide ROS
@@ -38,6 +88,21 @@ Create your first node!!
 cd exercise1/exercise1
 touch exercise1.py
 ```
+
+> ** Tip: Using VSCode with Docker**
+>
+> Instead of editing files with nano or vim inside the container, you can use VSCode on your host machine for a better development experience:
+>
+> 1. On your host machine, open the shared folder in VSCode:
+>    ```bash
+>    cd ros2-course-exchange
+>    code .
+>    ```
+> 2. Edit files in VSCode with full IDE features (syntax highlighting, autocomplete, etc.)
+> 3. Files are automatically synced to the container at `/home/user/exchange`
+> 4. Run and test your code inside the Docker container as usual
+>
+> **Alternative:** Install the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) to attach VSCode directly to the running container for an even more integrated experience.
 
 Edit exercise1.py. Please take some time to understand each line of comment, I have added comments after every line
 
@@ -123,9 +188,7 @@ terminator # terminator - to open two launchers
 ros2 run exercise1 exercise1
 ```
 
-## Exercise 2
-
-# Exercise to test publisher/subscriber
+## Exercise 2 — Publisher/Subscriber
 
 Create packages
 
@@ -366,7 +429,7 @@ What to modify
 + Add at least one status rule
 + Ensure the dashboard prints neatly
 
-## Part B: Turtle controller node
+## Part B: Telemetry Publisher Node
 
 ```python
 import rclpy
@@ -387,7 +450,13 @@ class TelemetryPublisher(Node):
 
     def publish_telemetry(self):
         msg = String()
-        # MODIFY THESE LINES  TO PUBLISH A STRING MESSAGE WITH step, speed and shape
+        # MODIFY THESE LINES TO PUBLISH A STRING MESSAGE WITH step, speed and shape
+        # Example format: "Shape: square | Speed: 2.0 | Step: 5"
+        # 1. Create a formatted string with the telemetry data
+        # 2. Assign it to msg.data
+        # 3. Publish the message using self.pub.publish(msg)
+        # 4. Optionally increment self.step counter
+        # 5. Use self.get_logger().info() to log what you're publishing
 
 def main(args=None):
     rclpy.init(args=args)
@@ -417,7 +486,21 @@ class DashboardSubscriber(Node):
         self.sub = self.create_subscription(String, '/telemetry', self.callback, 10)
 
     def callback(self, msg: String):
-        # MODIFY THESE LINES  TO PRINT DIFFERENT METRICS
+        # MODIFY THESE LINES TO PRINT DIFFERENT METRICS
+        # This callback receives telemetry data from the publisher
+        # 1. Parse the incoming message from msg.data (it's a string)
+        # 2. Extract individual metrics (shape, speed, step)
+        #    Hint: If using format "Shape: square | Speed: 2.0 | Step: 5"
+        #          you can use .split('|') to separate the parts
+        # 3. Create a nicely formatted dashboard display
+        #    Example:
+        #    ====== TURTLE DASHBOARD ======
+        #    Shape: square
+        #    Speed: 2.0 m/s
+        #    Progress: Step 5
+        #    Status: [Calculate based on step count]
+        #    ==============================
+        # 4. Print using self.get_logger().info() or plain print() for multi-line output
 
 def main(args=None):
     rclpy.init(args=args)
