@@ -102,6 +102,12 @@ touch exercise1.py
 > 3. Files are automatically synced to the container at `/home/user/exchange`
 > 4. Run and test your code inside the Docker container as usual
 >
+> **If you get permission errors in VSCode:**
+> Run this on your host machine to fix folder ownership:
+> ```bash
+> sudo chown -R $USER:$USER ~/ros2-course-exchange/
+> ```
+>
 > **Alternative:** Install the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) to attach VSCode directly to the running container for an even more integrated experience.
 
 Edit exercise1.py. Please take some time to understand each line of comment, I have added comments after every line
@@ -198,7 +204,7 @@ ros2 pkg create --build-type ament_python exercise2_subscriber
 ros2 pkg create --build-type ament_python exercise2_publisher
 ```
 
-Create publisher Node. Remember to set up setup.py
+Create publisher node (exercise2_publisher.py). Remember to set up setup.py
 
 ```python
 import rclpy
@@ -228,7 +234,7 @@ if __name__ == '__main__':
     main()
 ```
 
-Create Subscriber Node. Remeber to set up setup.py
+Create subscriber node (exercise2_subscriber.py). Remeber to set up setup.py
 
 ```python
 import rclpy
@@ -298,12 +304,41 @@ Identify:
 
 Publish velocity commands manually:
 
+**Experiment 1: Test different velocities**
 ```bash
+# Very slow movement
 ros2 topic pub /turtle1/cmd_vel geometry_msgs/msg/Twist \
-"{linear: {x: 2.0}, angular: {z: 1.0}}"
+"{linear: {x: 0.5}, angular: {z: 0.0}}"
+
+# Very fast movement
+ros2 topic pub /turtle1/cmd_vel geometry_msgs/msg/Twist \
+"{linear: {x: 10.0}, angular: {z: 0.0}}"
+
+# Pure rotation
+ros2 topic pub /turtle1/cmd_vel geometry_msgs/msg/Twist \
+"{linear: {x: 0.0}, angular: {z: 3.0}}"
+
+# Backward movement
+ros2 topic pub /turtle1/cmd_vel geometry_msgs/msg/Twist \
+"{linear: {x: -2.0}, angular: {z: 0.0}}"
 ```
 
-What do you see?
+**Experiment 2: Check the turtle's position**
+```bash
+# In a new terminal, echo the pose topic
+ros2 topic echo /turtle1/pose
+```
+
+**Questions to explore:**
+- Can you reach the edges of the window? What happens when the turtle hits a wall?
+- What is the coordinate range of the simulation? (Hint: watch the x and y values in `/turtle1/pose`)
+- What happens if you send very large velocity values (e.g., x: 100.0)?
+
+**Challenge:** Try to teleport the turtle back to center using this command:
+```bash
+ros2 service call /turtle1/teleport_absolute turtlesim/srv/TeleportAbsolute \
+"{x: 5.5, y: 5.5, theta: 0.0}"
+```
 
 ## Exercise 4 (take home)
 
