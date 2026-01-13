@@ -27,10 +27,10 @@ Setup instructions for three different paths:
 
 ### [1. Class 1 Exercises](1_class_1_exercises/1_class_1_exercises.md)
 Introduction to ROS 2 fundamentals:
-- **Exercise 1**: Hello World Node (20-30 min)
-- **Exercise 2**: Publisher/Subscriber pattern (30-45 min)
-- **Exercise 3**: Turtlesim basics (15-20 min)
-- **Exercise 4**: IoT Dashboard (take-home, 2-3 hours)
+- **Exercise 1**: Hello World Node
+- **Exercise 2**: Publisher/Subscriber pattern
+- **Exercise 3**: Turtlesim basics
+- **Exercise 4**: Turtlesim control and IoT Dashboard (take-home)
 
 ## Additional Resources
 
