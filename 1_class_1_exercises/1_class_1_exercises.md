@@ -363,16 +363,27 @@ cd /home/user/exchange/ros2_course_ws/src
 ros2 pkg create --build-type ament_python exercise4
 ```
 
-## Part A: Turtle controller node
+## Part A: Turtle controller node.
 
-Requirements
+**Goal 1**: Make the turtle draw an infinity (figure-eight).
+
+Important: turtlesim_node already subscribes to /turtle1/cmd_vel (velocity of turtle). You only need to publish velocity commands.
+
+What to modify
++ Make the turtle do an infinity (figure-eight) shape in motion in turtle_controller.py
++ Reuse and adapt the logic already used for circle and square
+Note: circle and square are already implemented. Your main task is to implement infinity.
+
+Requirements:
 
 ```bash
 cd exercise4/exercise4
 touch turtle_controller.py
 ```
 
-Starter code
+Starter code:
+
+Note: circle and square are already implemented. Your main task is to implement infinity.
 
 ```python
 import rclpy
@@ -389,7 +400,7 @@ class TurtleController(Node):
         # ---- MODIFY THESE LINES (choose your shape) ----
         self.shape = 'square'  # options: 'square', 'circle', 'infinity'
         self.linear_speed = 2.0
-        self.angular_speed = 1.57   # ~90 deg/s (rad/s) for square turning
+        self.angular_speed = 1.57
         # ------------------------------------------------
 
         self.state = 'FORWARD'   # used for square/infinity
@@ -399,6 +410,17 @@ class TurtleController(Node):
         self.step_count = 0     # used as "progress"
 
     def publish_cmd(self, linear_x: float, angular_z: float):
+        """
+        Publish a velocity command to the turtle.
+
+        IMPORTANT:
+        - turtlesim already listens to /turtle1/cmd_vel
+        - This function ALREADY publishes the command
+        - Do NOT create another publisher elsewhere
+
+        Your job is simply to CALL this function with
+        the desired linear and angular speeds.
+        """
         msg = Twist()
         msg.linear.x = float(linear_x)
         msg.angular.z = float(angular_z)
@@ -412,13 +434,11 @@ class TurtleController(Node):
         self.t += dt
 
         if self.shape == 'circle':
-            # ---- MODIFY THESE LINES ----
             # Circle: constant velocity for some time, then stop
             self.publish_cmd(self.linear_speed, 1.0)  # set angular speed
-            if self.t > 10.0:  # set duration
+            if self.t > 10.0:
                 self.stop()
                 rclpy.shutdown()
-            # ----------------------------
 
         elif self.shape == 'square':
             # Square: FORWARD for segment_time, TURN for turn_time, repeat 4 times
@@ -444,7 +464,7 @@ class TurtleController(Node):
             # Infinity: simple approach = 1 circle left, then 1 circle right
             # You can implement this using states and time thresholds.
             # ---- TODO: MODIFY / COMPLETE THIS SECTION ----
-            self.get_logger().info('TODO: implement infinity (figure-eight)')
+            self.get_logger().info('TODO: implement infinity')
             self.stop()
             rclpy.shutdown()
             # ---------------------------------------------
@@ -460,11 +480,17 @@ if __name__ == '__main__':
     main()
 ```
 
+## Part B: Telemetry Publisher Node and Dashboard Subscriber Node
+
+In this node, you will simulate an IoT telemetry stream for the turtle controller.
+
 What to modify
++ Create and publish a formatted telemetry string
++ The data can be invented (simulated): no need to subscribe to the turtle controller or turtlesim
 + Add at least one status rule
 + Ensure the dashboard prints neatly
 
-## Part B: Telemetry Publisher Node
+Starter code for telemetry publisher:
 
 ```python
 import rclpy
@@ -504,11 +530,7 @@ if __name__ == '__main__':
     main()
 ```
 
-What to modify
-+ Add at least one status rule
-+ Ensure the dashboard prints neatly
-
-## Part C: Dashboard Subscriber Node
+Starter code for dashboard subscriber:
 
 ```python
 import rclpy
@@ -547,10 +569,6 @@ def main(args=None):
 if __name__ == '__main__':
     main()
 ```
-
-What to modify
-+ Add at least one status rule
-+ Ensure the dashboard prints neatly
 
 ### Extra setup:
 
@@ -591,6 +609,11 @@ ros2 run exercise4 dashboard_subscriber
 ### Submit:
 
 1. Your 3 Python files
-2. A video of turtlesim drawing the shape
+2. A video of turtlesim drawing the infinity (figure-eight) shape
 3. A screenshot of the dashboard output
 4. A text of what you did (5–10 lines)
+
+I will mark the exercise out of 10 points.
++ 5 points for turtle drawing infinity.
++ 1 point for the dashboard logic.
++ 4 points for the text of what you did.
