@@ -32,6 +32,13 @@ Introduction to ROS 2 fundamentals:
 - **Exercise 3**: Turtlesim basics
 - **Exercise 4**: Turtlesim control and IoT Dashboard (take-home)
 
+### [2. Class 2 Exercises](2_class_2_exercises/2_class_2_exercises.md)
+Advanced ROS 2 concepts:
+- **Services**: Creating and calling ROS 2 services
+- **TF Broadcasting**: Coordinate frame transforms
+- **Actions**: Implementing action servers
+- **URDF/Xacro**: Robot description formats
+
 ## Additional Resources
 
 - [ROS 2 Documentation](https://docs.ros.org/en/jazzy/)
