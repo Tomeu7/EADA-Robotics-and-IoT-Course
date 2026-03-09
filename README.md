@@ -46,7 +46,17 @@ Simulation and autonomous control concepts:
 - **ROS-Gazebo Integration**: Bridging with `ros_gz_bridge`
 - **Model spawning**: Creating entities with `ros_gz_sim/create`
 
-### [4. Final Project](final_project/FINAL_PROJECT.md)
+### [4. Class 4 Exercises](4_class_4_exercices/exercises_session4.md)
+Sensors, simulation, and autonomous behaviour:
+- **Exercise 1**: Add Differential Drive Plugin to the robot URDF
+- **Exercise 2**: Add a LiDAR sensor and read minimum distance while moving
+- **Exercise 3**: Add an IMU sensor and log orientation and acceleration
+- **Exercise 4**: Use launch files and inspect bridged topics
+- **Exercise 5**: Add an RGB camera to the robot
+- **Exercise 6**: Detect a red object using OpenCV and cv_bridge
+- **Exercise 7**: Finite State Machine — take-home exam (due 22nd March)
+
+### [5. Final Project](final_project/FINAL_PROJECT.md)
 Capstone project for the course.
 
 ## Additional Resources
